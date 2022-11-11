@@ -24,11 +24,14 @@ namespace EFTutorial
                 {
                     using (var db = new BlogContext())
                     {
+                        int count = 0;
                         System.Console.WriteLine("Here is the list of blogs");
                         foreach (var b in db.Blogs)
                         {
                             System.Console.WriteLine($"Blog: {b.BlogId}: {b.Name}");
+                            count++;
                         }
+                        Console.WriteLine(count + " blogs displayed");
                     }
 
                 }
@@ -36,34 +39,56 @@ namespace EFTutorial
                 {
                     System.Console.WriteLine("Enter your Blog name");
                     var blogName = Console.ReadLine();
-
-                    // // Create new Blog
-                    var blog = new Blog();
-                    blog.Name = blogName;
-
-                    // // Save blog object to database
-                    using (var db = new BlogContext())
+                    if(blogName != null)
                     {
-                        db.Add(blog);
-                        db.SaveChanges();
+                        var blog = new Blog();
+                        blog.Name = blogName;
+
+                        // // Save blog object to database
+                        using (var db = new BlogContext())
+                        {
+                            db.Add(blog);
+                            db.SaveChanges();
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine("name cannot be null");
+                    }
+                    // // Create new Blog
+                    
                 }
                 if(choice == 3)
                 {
                     System.Console.WriteLine("Enter Blog ID to post to");
-                    var blogID = Convert.ToInt16(Console.ReadLine());
-                    System.Console.WriteLine("Enter your Post title");
-                    var postTitle = Console.ReadLine();
-
-                    var post = new Post();
-                    post.Title = postTitle;
-                    post.BlogId = blogID;
-
-                    using (var db = new BlogContext())
+                    var blogID = Console.ReadLine();
+                    if(int.TryParse(blogID, out int blogIDNUM) == false)
                     {
-                        db.Posts.Add(post);
-                        db.SaveChanges();
+                        Console.WriteLine("ID must be integer");
                     }
+                    else
+                    {
+                        System.Console.WriteLine("Enter your Post title");
+                        var postTitle = Console.ReadLine();
+                        if (postTitle != null)
+                        {
+                            var post = new Post();
+                            post.Title = postTitle;
+                            post.BlogId = blogIDNUM;
+
+                            using (var db = new BlogContext())
+                        {
+                            db.Posts.Add(post);
+                            db.SaveChanges();
+                        }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Title must not be null");
+                        }
+                        
+                    }
+                   
 
                 }
                 if(choice == 4)
